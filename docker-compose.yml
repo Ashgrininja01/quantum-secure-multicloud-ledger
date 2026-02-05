@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  minio-aws:
+    image: minio/minio
+    container_name: minio_aws
+    command: server /data
+    ports:
+      - "9001:9000"
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: password
+
+  minio-azure:
+    image: minio/minio
+    container_name: minio_azure
+    command: server /data
+    ports:
+      - "9002:9000"
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: password
+
+  minio-gcp:
+    image: minio/minio
+    container_name: minio_gcp
+    command: server /data
+    ports:
+      - "9003:9000"
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: password
