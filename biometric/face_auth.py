@@ -6,8 +6,8 @@ KEY_PATH = "biometric/biometric.key.npy"
 
 def authenticate_face():
     stored = np.load(KEY_PATH)
-
     cam = cv2.VideoCapture(2)
+
     print("Face authentication started")
 
     while True:
@@ -25,7 +25,9 @@ def authenticate_face():
 
             if dist < 0.75:
                 print("Face authentication successful")
-                break
+                cam.release()
+                cv2.destroyAllWindows()
+                return True
             else:
                 print("Face authentication failed")
 
@@ -35,6 +37,4 @@ def authenticate_face():
 
     cam.release()
     cv2.destroyAllWindows()
-
-if __name__ == "__main__":
-    authenticate_face()
+    return False
