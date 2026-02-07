@@ -2,6 +2,5 @@ cryptography
 opencv-python
 numpy
 oqs
-fabric-sdk-py
 minio
 matplotlib
