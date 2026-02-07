@@ -23,7 +23,7 @@ def encrypt_file(path):
         f.write(kem_ct)
 
     # Sign metadata using ML-DSA
-    metadata = f"{path}|{time.time()}".encode()
+    metadata = f"{path}|{int(time.time())}".encode()
 
     with open(path + ".meta", "wb") as f:    
         f.write(metadata)
