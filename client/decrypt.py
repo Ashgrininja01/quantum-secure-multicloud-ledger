@@ -41,5 +41,11 @@ def decrypt_file(path):
 
     print("Decrypted successfully")
 
+import sys
+
 if __name__ == "__main__":
-    decrypt_file("sample.txt")
+    if len(sys.argv) != 2:
+        print("Usage: python decrypt.py <file_path>")
+        exit(1)
+
+    decrypt_file(sys.argv[1])
