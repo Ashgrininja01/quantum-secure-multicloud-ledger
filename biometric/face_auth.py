@@ -1,34 +1,40 @@
 import cv2
-import hashlib
+import face_recognition
+import numpy as np
 
-KEY_PATH = "biometric/biometric.key"
+KEY_PATH = "biometric/biometric.key.npy"
 
 def authenticate_face():
-    cam = cv2.VideoCapture(0)
-    print("Face authentication: press 'q' to verify.")
+    stored = np.load(KEY_PATH)
+
+    cam = cv2.VideoCapture(2)
+    print("Face authentication started")
 
     while True:
         ret, frame = cam.read()
-        cv2.imshow("Authenticate Face", frame)
+        if not ret:
+            continue
+
+        rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        boxes = face_recognition.face_locations(rgb)
+
+        if len(boxes) == 1:
+            encoding = face_recognition.face_encodings(rgb, boxes)[0]
+            dist = np.linalg.norm(stored - encoding)
+            print(f"Distance: {dist:.3f}")
+
+            if dist < 0.75:
+                print("Face authentication successful")
+                break
+            else:
+                print("Face authentication failed")
+
+        cv2.imshow("Auth Face", frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
     cam.release()
     cv2.destroyAllWindows()
 
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    current = hashlib.sha256(gray.tobytes()).digest()
-
-    with open(KEY_PATH, "rb") as f:
-        stored = f.read()
-
-    if current == stored:
-        print("Face authentication successful.")
-        return True
-    else:
-        print("Face authentication failed.")
-        return False
-
 if __name__ == "__main__":
     authenticate_face()
-
