@@ -10,7 +10,8 @@ def decrypt_file(path):
         return
 
     # Step 2: Verify PQC signature (ledger check)
-    metadata = None
+    with open(path + ".meta", "rb") as f:
+        metadata = f.read()
     with open(path + ".pub", "rb") as f:
         pub = f.read()
     with open(path + ".sig", "rb") as f:
