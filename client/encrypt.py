@@ -1,6 +1,7 @@
 from crypto.aes import aes_encrypt
 from crypto.pqc_kem import kem_encapsulate
 from crypto.pqc_signature import sign_metadata
+from cloud.storage_client import replicate
 import time
 
 def encrypt_file(path):
@@ -29,14 +30,17 @@ def encrypt_file(path):
         f.write(metadata)
 
     pub, sig = sign_metadata(metadata)
-    )
 
     with open(path + ".pub", "wb") as f:
         f.write(pub)
 
     with open(path + ".sig", "wb") as f:
         f.write(sig)
-
+    replicate(path + ".enc")
+    replicate(path + ".kem")
+    replicate(path + ".meta")
+    replicate(path + ".pub")
+    replicate(path + ".sig")
     print("Encrypted with biometric-bound AES + PQC.")
 
 import sys
