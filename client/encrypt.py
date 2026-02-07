@@ -4,20 +4,35 @@ from crypto.pqc_signature import sign_metadata
 import time
 
 def encrypt_file(path):
-    data = open(path, "rb").read()
+    # Read input file
+    with open(path, "rb") as f:
+        data = f.read()
 
-    pk, kem_ct, seed = kem_encapsulate()
+    # PQC Key Encapsulation (Kyber)
+    kem_ct, seed = kem_encapsulate()
+
+    # AES-256 encryption (biometric-bound internally)
     iv, ct = aes_encrypt(data, seed)
 
-    open(path + ".enc", "wb").write(iv + ct)
-    open(path + ".kem", "wb").write(kem_ct)
+    # Write encrypted file
+    with open(path + ".enc", "wb") as f:
+        f.write(iv + ct)
 
+    # Write KEM ciphertext
+    with open(path + ".kem", "wb") as f:
+        f.write(kem_ct)
+
+    # Sign metadata using ML-DSA
     metadata = f"{path}|{time.time()}".encode()
     pub, sig = sign_metadata(metadata)
 
-    open(path + ".pub", "wb").write(pub)
-    open(path + ".sig", "wb").write(sig)
+    with open(path + ".pub", "wb") as f:
+        f.write(pub)
+
+    with open(path + ".sig", "wb") as f:
+        f.write(sig)
 
     print("Encrypted with biometric-bound AES + PQC.")
+
 if __name__ == "__main__":
     encrypt_file("sample.txt")
