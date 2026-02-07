@@ -19,3 +19,5 @@ def encrypt_file(path):
     open(path + ".sig", "wb").write(sig)
 
     print("Encrypted with biometric-bound AES + PQC.")
+if __name__ == "__main__":
+    encrypt_file("sample.txt")
