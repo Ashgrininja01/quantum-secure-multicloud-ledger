@@ -1,2 +1,13 @@
 cd ~
-git clone
+git clone https://github.com/Ashgrininja01/quantum-secure-multicloud-ledger.git
+cd ~/quantum-secure-multicloud-ledger
+python3 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+python biometric/face_enroll.py
+python biometric/face_auth.py
+python client/encrypt.py test.txt
+find results -type f
+python client/decrypt.py test.txt
+
