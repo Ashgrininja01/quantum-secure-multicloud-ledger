@@ -24,7 +24,12 @@ def encrypt_file(path):
 
     # Sign metadata using ML-DSA
     metadata = f"{path}|{time.time()}".encode()
+
+    with open(path + ".meta", "wb") as f:    
+        f.write(metadata)
+
     pub, sig = sign_metadata(metadata)
+    )
 
     with open(path + ".pub", "wb") as f:
         f.write(pub)
