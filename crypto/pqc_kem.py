@@ -1,12 +1,15 @@
-import oqs
+from oqs import KeyEncapsulation
+import os
+
+KEM_ALG = "Kyber512"
 
 def kem_encapsulate():
-    kem = oqs.KeyEncapsulation("Kyber512")
-    pk = kem.generate_keypair()
-    ct, ss = kem.encap_secret(pk)
-    return pk, ct, ss
+    kem = KeyEncapsulation(KEM_ALG)
+    public_key = kem.generate_keypair()
+    ciphertext, shared_secret = kem.encap_secret(public_key)
+    return public_key, ciphertext, shared_secret
 
-def kem_decapsulate(ct):
-    kem = oqs.KeyEncapsulation("Kyber512")
-    return kem.decap_secret(ct)
-
+def kem_decapsulate(ciphertext, secret_key):
+    kem = KeyEncapsulation(KEM_ALG)
+    kem.secret_key = secret_key
+    return kem.decap_secret(ciphertext)
