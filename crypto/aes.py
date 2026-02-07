@@ -1,13 +1,15 @@
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 import os
+from crypto.key_manager import derive_aes_key
 
-def aes_encrypt(data, key):
+def aes_encrypt(data: bytes, seed: bytes):
+    key = derive_aes_key(seed)
     iv = os.urandom(12)
-    enc = Cipher(algorithms.AES(key), modes.GCM(iv)).encryptor()
-    ct = enc.update(data) + enc.finalize()
-    return iv, ct, enc.tag
+    aesgcm = AESGCM(key)
+    ct = aesgcm.encrypt(iv, data, None)
+    return iv, ct
 
-def aes_decrypt(iv, ct, tag, key):
-    dec = Cipher(algorithms.AES(key), modes.GCM(iv, tag)).decryptor()
-    return dec.update(ct) + dec.finalize()
-
+def aes_decrypt(iv: bytes, ct: bytes, seed: bytes):
+    key = derive_aes_key(seed)
+    aesgcm = AESGCM(key)
+    return aesgcm.decrypt(iv, ct, None)
