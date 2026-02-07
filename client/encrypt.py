@@ -39,5 +39,12 @@ def encrypt_file(path):
 
     print("Encrypted with biometric-bound AES + PQC.")
 
+import sys
+
 if __name__ == "__main__":
-    encrypt_file("sample.txt")
+    if len(sys.argv) != 2:
+        print("Usage: python encrypt.py <file_path>")
+        exit(1)
+
+    encrypt_file(sys.argv[1])
+
